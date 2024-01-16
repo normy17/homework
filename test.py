@@ -16,5 +16,4 @@ data = {
 }
 
 response = requests.post(url=url, data=json.dumps(data)).status_code
-
 print(response)
