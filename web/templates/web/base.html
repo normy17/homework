@@ -14,9 +14,10 @@
             </div>
         {% else %}
             <a href="{% url 'main' %}">Новости</a>
-            <a href="#">Написать новость</a>
+            <a href="{% url 'news_add' %}">Написать новость</a>
             <a href="#">Избранное</a>
-            <div style="text-align: right">
+            <a href="{% url 'tags' %}">Теги</a>
+            <div style="text-align:right">
                 <span>Вы авторизованы как <b>{{ user.username }}</b></span>
                 <a href="{% url 'logout' %}">Выход</a>
             </div>

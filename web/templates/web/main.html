@@ -1,4 +1,51 @@
 {% extends 'web/base.html' %}
 {% block content %}
-    <p>Hello!</p>
+    <h2>Все новости</h2>
+    <br>
+    <form>
+        <b>Фильтры:</b>
+
+        {% for field in filter_form %}
+            {{ field.label }}
+            {{ field }}
+        {% endfor %}
+        <button>Найти</button>
+
+        <a href="?">Показать все статьи</a>
+    </form>
+    <ul>
+        {% for n in news %}
+            <li>
+                <b>{{ n.title }}</b> - {{ n.post_date }}
+                <small>
+                    {% if n.tags.all %}
+                        [{{ n.tags_count }}: {% for tag in n.tags.all %} {{ tag.title }} {% endfor %}]
+                    {% endif %}
+
+                    {{ n.user.username }}
+                </small>
+                <br>
+                <p> {{ n.text }} </p>
+                <a href="{% url 'news_delete' n.id %}">Удалить</a>
+                <a href="{% url 'news_edit' n.id %}">Изменить</a>
+            </li>
+            <br>
+        {% endfor %}
+    </ul>
+
+    всего {{ total_count }} статей. {{ news|length }} а этой странице.
+
+    <nav>
+        {% if news.has_previous %}
+            <a href="?page=1">В начало</a>
+            <a href="?page={{ news.previous_page_number }}">Назад</a>
+        {% endif %}
+
+        страница {{ news.number }} из {{ news.paginator.num_pages }}
+
+        {% if news.has_next %}
+            <a href="?page={{ news.next_page_number }}">Вперёд</a>
+            <a href="?page={{ news.paginator.num_pages }}">В конец</a>
+        {% endif %}
+    </nav>
 {% endblock %}
