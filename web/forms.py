@@ -1,7 +1,7 @@
 from django import forms
 from django.contrib.auth import get_user_model
 
-from web.models import News, NewsTag
+from web.models import News, NewsTag, Comment
 
 User = get_user_model()
 
@@ -23,6 +23,7 @@ class RegistrationForm(forms.ModelForm):
 class AuthForm(forms.Form):
     username = forms.CharField()
     password = forms.CharField(widget=forms.PasswordInput())
+
 
 class NewsForm(forms.ModelForm):
     def save(self, commit=True):
@@ -46,3 +47,14 @@ class NewsFilterForm(forms.Form):
         widget=forms.TextInput(attrs={"placeholder": "Поиск"}),
         required=False
     )
+
+
+class CommentsForm(forms.ModelForm):
+    def save(self, commit=True):
+        self.instance.user = self.initial['user']
+        self.instance.news = self.initial['news']
+        return super().save(commit)
+
+    class Meta:
+        model = Comment
+        fields = ('text', )

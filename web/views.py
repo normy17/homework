@@ -5,7 +5,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 
 from web.forms import *
 from web.models import *
-from web.services import filter_news
+from web.services import filter_news, filter_comment
 
 
 @login_required
@@ -44,6 +44,23 @@ def news_delete_view(request, id):
     news = get_object_or_404(News, id=id)
     news.delete()
     return redirect('main')
+
+
+def news_view(request, id):
+    news = get_object_or_404(News, id=id)
+    comments = Comment.objects.all()
+    comments = filter_comment(comments, news)
+    form = CommentsForm()
+    if request.method == 'POST':
+        form = CommentsForm(data=request.POST, initial={"user": request.user, "news": news})
+        if form.is_valid():
+            form.save()
+            return redirect("news", id)
+    return render(request, "web/current_news.html", {
+        "news": news,
+        "form": form,
+        "comments": comments
+    })
 
 
 def registration_view(request):
