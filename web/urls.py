@@ -13,4 +13,6 @@ urlpatterns = [
     path("news/<int:id>/delete/", news_delete_view, name="news_delete"),
     path('tags/', tags_view, name='tags'),
     path('tags/<int:id>/delete/', tags_delete_view, name='tags_delete'),
+    path('favorites/', favorite_view, name='favorites'),
+    path('favorites/<int:id>/add-delete', favorite_add_view, name='favorite_add-delete')
 ]

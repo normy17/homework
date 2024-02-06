@@ -1,0 +1,23 @@
+{% extends 'web/base.html' %}
+{% block content %}
+    <h2>Все новости</h2>
+    <br>
+    <ul>
+        {% for n in news %}
+            <li>
+                <a href="{% url 'news' n.news.id %}">{{ n.news.title }}</a> - {{ n.news.post_date }}
+                <small>
+                    {% if n.news.tags.all %}
+                        [{{ n.news.tags_count }}: {% for tag in n.news.tags.all %} {{ tag.title }} {% endfor %}]
+                    {% endif %}
+
+                    {{ n.user.username }}
+                </small>
+                <br>
+                <p> {{ n.news.text }} </p>
+                <a href="{% url 'favorite_add-delete' n.news.id %}">Удалить из избранного</a>
+            </li>
+            <br>
+        {% endfor %}
+    </ul>
+{% endblock %}

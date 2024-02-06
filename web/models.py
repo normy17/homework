@@ -42,3 +42,8 @@ class Comment(models.Model):
     class Meta:
         verbose_name = 'комментарий'
         verbose_name_plural = 'комментарии'
+
+
+class Favorite(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name="Пользователь")
+    news = models.ForeignKey(News, on_delete=models.CASCADE, verbose_name="Новость")

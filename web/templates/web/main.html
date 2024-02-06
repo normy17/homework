@@ -28,6 +28,7 @@
                 <p> {{ n.text }} </p>
                 <a href="{% url 'news_delete' n.id %}">Удалить</a>
                 <a href="{% url 'news_edit' n.id %}">Изменить</a>
+                <a href="{% url 'favorite_add-delete' n.id %}">В избранное</a>
             </li>
             <br>
         {% endfor %}

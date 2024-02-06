@@ -122,3 +122,24 @@ def tags_delete_view(request, id):
     tags = get_object_or_404(NewsTag, id=id)
     tags.delete()
     return redirect('tags')
+
+
+def favorite_add_view(request, id):
+    user = request.user
+    news = get_object_or_404(News, id=id)
+
+    favorite, created = Favorite.objects.get_or_create(user=user, news=news)
+
+    if not created:
+        favorite.delete()
+
+    return redirect('favorites')
+
+
+def favorite_view(request):
+    user = request.user
+    news = Favorite.objects.filter(user=user)
+
+    return render(request, 'web/favorites.html', {
+        'news': news
+    })
