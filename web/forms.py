@@ -48,6 +48,17 @@ class NewsFilterForm(forms.Form):
         required=False
     )
 
+    sort = forms.ChoiceField(
+        label='Сортировать по',
+        choices=[
+            ('post_date', 'дате'),
+            ('title', 'названию'),
+            ('user', 'автору'),
+            ('comment_count', 'кол-ву комментариев'),
+            ('favorite_count', 'кол-ву добю. в изб.')
+        ]
+    )
+
 
 class CommentsForm(forms.ModelForm):
     def save(self, commit=True):

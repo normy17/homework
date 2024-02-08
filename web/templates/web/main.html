@@ -16,7 +16,7 @@
     <ul>
         {% for n in news %}
             <li>
-                <a href="{% url 'news' n.id %}">{{ n.title }}</a> - {{ n.post_date }}
+                <a href="{% url 'news' n.id %}">{{ n.title }}</a> - {{ n.post_date }} - {{ n.comment_count }} комментариев - {{ n.favorite_count }} добавлений в избранное
                 <small>
                     {% if n.tags.all %}
                         [{{ n.tags_count }}: {% for tag in n.tags.all %} {{ tag.title }} {% endfor %}]

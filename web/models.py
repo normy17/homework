@@ -22,6 +22,9 @@ class News(models.Model):
     post_date = models.DateTimeField(verbose_name='Дата публикации', default=timezone.now)
     text = models.TextField(verbose_name='Текст новости')
     tags = models.ManyToManyField(NewsTag, verbose_name='Теги', blank=True)
+    comment_count = models.IntegerField(default=0, verbose_name='Количество комментариев')
+    favorite_count = models.IntegerField(default=0, verbose_name='Количество добавивших в избранное')
+
 
     def __str__(self):
         return f'{self.user.name}: {self.title}'

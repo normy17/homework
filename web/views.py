@@ -55,6 +55,8 @@ def news_view(request, id):
         form = CommentsForm(data=request.POST, initial={"user": request.user, "news": news})
         if form.is_valid():
             form.save()
+            news.comment_count += 1
+            news.save()
             return redirect("news", id)
     return render(request, "web/current_news.html", {
         "news": news,
@@ -132,6 +134,11 @@ def favorite_add_view(request, id):
 
     if not created:
         favorite.delete()
+        news.favorite_count -= 1
+        news.save()
+    else:
+        news.favorite_count += 1
+        news.save()
 
     return redirect('favorites')
 
