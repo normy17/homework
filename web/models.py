@@ -27,7 +27,7 @@ class News(models.Model):
 
 
     def __str__(self):
-        return f'{self.user.name}: {self.title}'
+        return f'{self.user}: {self.title}'
 
     class Meta:
         verbose_name = 'новость'
