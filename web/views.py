@@ -11,6 +11,10 @@ from web.services import filter_news, filter_comment
 @login_required
 def main_view(request):
     news = News.objects.all()
+    admin = False
+
+    if request.user.groups.filter(name='admins'):
+        admin = True
 
     filter_form = NewsFilterForm(request.GET)
     filter_form.is_valid()
@@ -23,7 +27,8 @@ def main_view(request):
     return render(request, "web/main.html", {
         'news': paginator.get_page(page_number),
         'total_count': total_count,
-        'filter_form': filter_form
+        'filter_form': filter_form,
+        'admin': admin
     })
 
 
@@ -48,6 +53,9 @@ def news_delete_view(request, id):
 
 def news_view(request, id):
     news = get_object_or_404(News, id=id)
+    admin = False
+    if request.user.groups.filter(name='admins'):
+        admin = True
     comments = Comment.objects.all()
     comments = filter_comment(comments, news)
     form = CommentsForm()
@@ -61,8 +69,15 @@ def news_view(request, id):
     return render(request, "web/current_news.html", {
         "news": news,
         "form": form,
-        "comments": comments
+        "comments": comments,
+        "admin": admin
     })
+
+
+def comment_delete(request, id):
+    comment = get_object_or_404(Comment, id=id)
+    comment.delete()
+    return redirect('main')
 
 
 def registration_view(request):

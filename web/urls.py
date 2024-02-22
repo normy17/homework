@@ -10,6 +10,7 @@ urlpatterns = [
     path("news/add/", news_edit_view, name="news_add"),
     path("news/<int:id>/edit", news_edit_view, name="news_edit"),
     path("news/<int:id>/", news_view, name="news"),
+    path("comments/<int:id>/delete", comment_delete, name="comment_delete"),
     path("news/<int:id>/delete/", news_delete_view, name="news_delete"),
     path('tags/', tags_view, name='tags'),
     path('tags/<int:id>/delete/', tags_delete_view, name='tags_delete'),

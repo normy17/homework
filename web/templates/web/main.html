@@ -26,8 +26,10 @@
                 </small>
                 <br>
                 <p> {{ n.text }} </p>
+                {% if admin %}
                 <a href="{% url 'news_delete' n.id %}">Удалить</a>
                 <a href="{% url 'news_edit' n.id %}">Изменить</a>
+                {% endif %}
                 <a href="{% url 'favorite_add-delete' n.id %}">В избранное</a>
             </li>
             <br>
