@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button>Зарегистрировать</button>
+</form>
+</br>
+{% for user in users %}
+    <li>
+        {{ user }}            <a href="{% url 'delete_user' user.id %}">Удалить пользователя</a>
+    </li>
+    <br>
+{% endfor %}
+</body>
+</html>

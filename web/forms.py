@@ -1,7 +1,7 @@
 from django import forms
 from django.contrib.auth import get_user_model
 
-from web.models import News, NewsTag, Comment
+from web.models import News, NewsTag, Comment, Settings
 
 User = get_user_model()
 
@@ -69,3 +69,17 @@ class CommentsForm(forms.ModelForm):
     class Meta:
         model = Comment
         fields = ('text', )
+
+
+class RegistrationFormForAdmin(RegistrationForm):
+    is_admin = forms.ChoiceField(
+        label='Добавить в админку?',
+        widget=forms.CheckboxInput,
+        required=False
+    )
+
+
+class SettingsForm(forms.ModelForm):
+    class Meta:
+        model = Settings
+        fields = ('color', 'font_size', 'font_color')

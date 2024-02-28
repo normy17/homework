@@ -50,3 +50,9 @@ class Comment(models.Model):
 class Favorite(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name="Пользователь")
     news = models.ForeignKey(News, on_delete=models.CASCADE, verbose_name="Новость")
+
+
+class Settings(models.Model):
+    color = models.TextField(verbose_name='Цвет фона')
+    font_size = models.IntegerField(verbose_name='Размер шрифта')
+    font_color = models.TextField(verbose_name='Цвет шрифта')

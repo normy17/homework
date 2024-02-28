@@ -15,5 +15,8 @@ urlpatterns = [
     path('tags/', tags_view, name='tags'),
     path('tags/<int:id>/delete/', tags_delete_view, name='tags_delete'),
     path('favorites/', favorite_view, name='favorites'),
-    path('favorites/<int:id>/add-delete', favorite_add_view, name='favorite_add-delete')
+    path('favorites/<int:id>/add-delete', favorite_add_view, name='favorite_add-delete'),
+    path('reg_user/', reg_user_for_admin, name='reg_user_for_admin'),
+    path('reg_user/<int:id>/delete', user_delete_view, name='delete_user'),
+    path('settings/', settings, name='settings')
 ]

@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <title>Title</title>
 </head>
-<body>
+<body style="background-color: {{ color }}; color: {{ font_color }}; font-size: {{ font_size }}px !important">
     <h1><a href="{% url 'main' %}">Новости</a></h1>
     <nav>
         {% if user.is_anonymous %}
@@ -17,6 +17,8 @@
             {% if request.user.groups.first.name == 'admins' %}
                 <a href="{% url 'news_add' %}">Написать новость</a>
                 <a href="{% url 'tags' %}">Теги</a>
+                <a href="{% url 'reg_user_for_admin' %}">Добавить пользователя</a>
+                <a href="settings">Настройки</a>
             {% endif %}
             <a href="#">Избранное</a>
             <div style="text-align:right">

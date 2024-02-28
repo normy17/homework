@@ -2,6 +2,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
 from django.shortcuts import render, redirect, get_object_or_404
+from django.contrib.auth.models import Group
 
 from web.forms import *
 from web.models import *
@@ -97,6 +98,53 @@ def registration_view(request):
     return render(request, "web/registration.html", {
         "form": form,
         "is_success": is_success
+    })
+
+
+def reg_user_for_admin(request):
+    form = RegistrationFormForAdmin()
+    users = User.objects.all()
+    if request.method == "POST":
+        form = RegistrationForm(data=request.POST)
+        if form.is_valid():
+            user = User(
+                username=form.cleaned_data['username'],
+                email=form.cleaned_data['email']
+            )
+
+            user.set_password(form.cleaned_data['password'])
+            user.save()
+            if 'is_admin' in request.POST and request.POST['is_admin'] == 'on':
+                user.groups.add(Group.objects.get(name='admins'))
+            user.save()
+            return redirect('reg_user_for_admin')
+    return render(request, 'web/reg_for_admin.html', context={
+        'form': form,
+        'users': users
+    })
+
+
+def user_delete_view(request, id):
+    user = get_object_or_404(User, id=id)
+    user.delete()
+    return redirect('reg_user_for_admin')
+
+
+def settings(request):
+    form = SettingsForm()
+    if request.method == "POST":
+        setting = Settings.objects.first()
+        form = SettingsForm(data=request.POST, instance=setting)
+        if form.is_valid():
+            form.save()
+
+            return render(request, 'web/base.html', context={
+                'color': setting.color,
+                'font_color': setting.font_color,
+                'font_size': setting.font_size
+            })
+    return render(request, 'web/settings.html', context={
+        'form': form
     })
 
 
