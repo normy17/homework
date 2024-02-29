@@ -5,6 +5,12 @@ from django.utils import timezone
 User = get_user_model()
 
 
+class Profile(models.Model):
+    account = models.OneToOneField(User, on_delete=models.CASCADE, primary_key=True)
+    is_blocked = models.BooleanField("Статус блокировки", default=False)
+    time_unblock = models.DateTimeField("Время разблокировки", blank=True, null=True)
+
+
 class NewsTag(models.Model):
     title = models.CharField(max_length=32, verbose_name="Название")
 

@@ -1,10 +1,5 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+{% extends 'web/base.html' %}
+{% block content %}
 <form method="post">
     {% csrf_token %}
     {{ form.as_p }}
@@ -13,9 +8,8 @@
 </br>
 {% for user in users %}
     <li>
-        {{ user }}            <a href="{% url 'delete_user' user.id %}">Удалить пользователя</a>
+        {{ user }} <a href="{% url 'delete_user' user.id %}">Удалить пользователя</a>
     </li>
     <br>
 {% endfor %}
-</body>
-</html>
+{% endblock %}

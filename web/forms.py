@@ -1,7 +1,7 @@
 from django import forms
 from django.contrib.auth import get_user_model
 
-from web.models import News, NewsTag, Comment, Settings
+from web.models import News, NewsTag, Comment, Settings, Profile
 
 User = get_user_model()
 
@@ -83,3 +83,14 @@ class SettingsForm(forms.ModelForm):
     class Meta:
         model = Settings
         fields = ('color', 'font_size', 'font_color')
+
+
+class BlockedUser(forms.Form):
+    account = forms.ChoiceField(
+        choices=[(i.id, i.username) for i in User.objects.all()]
+    )
+    time_unblock = forms.DateTimeField(
+        widget=forms.DateTimeInput(
+            attrs={"type": "datetime-local"}
+        )
+    )

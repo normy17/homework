@@ -1,7 +1,7 @@
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
-from django.shortcuts import render, redirect, get_object_or_404
+from django.shortcuts import render, redirect, get_object_or_404, HttpResponse
 from django.contrib.auth.models import Group
 
 from web.forms import *
@@ -94,6 +94,8 @@ def registration_view(request):
 
             user.set_password(form.cleaned_data['password'])
             user.save()
+            profile = Profile(account=user)
+            profile.save()
             is_success = True
     return render(request, "web/registration.html", {
         "form": form,
@@ -117,10 +119,26 @@ def reg_user_for_admin(request):
             if 'is_admin' in request.POST and request.POST['is_admin'] == 'on':
                 user.groups.add(Group.objects.get(name='admins'))
             user.save()
+            profile = Profile(account=user)
+            profile.save()
             return redirect('reg_user_for_admin')
     return render(request, 'web/reg_for_admin.html', context={
         'form': form,
         'users': users
+    })
+
+
+def block_user(request):
+    form = BlockedUser()
+    if request.method == 'POST':
+        form = BlockedUser(data=request.POST)
+        if form.is_valid():
+            user = get_object_or_404(User, id=form.cleaned_data['account'])
+            user.profile.is_blocked = True
+            user.profile.time_unblock = form.cleaned_data['time_unblock']
+            user.profile.save()
+    return render(request, 'web/block_user.html', context={
+        'form': form
     })
 
 
@@ -131,23 +149,39 @@ def user_delete_view(request, id):
 
 
 def settings(request):
-    form = SettingsForm()
+    instance = Settings.objects.first()
+    form = SettingsForm(instance=instance)
     if request.method == "POST":
         setting = Settings.objects.first()
         form = SettingsForm(data=request.POST, instance=setting)
         if form.is_valid():
             form.save()
 
-            return render(request, 'web/base.html', context={
-                'color': setting.color,
-                'font_color': setting.font_color,
-                'font_size': setting.font_size
-            })
+            return redirect('settings')
     return render(request, 'web/settings.html', context={
         'form': form
     })
 
 
+# def auth_view(request):
+#     form = AuthForm()
+#     if request.method == 'POST':
+#         form = AuthForm(data=request.POST)
+#         if form.is_valid():
+#             user = authenticate(**form.cleaned_data)
+#             if user is None:
+#                 form.add_error(None, "Неправильный логин или пароль")
+#             else:
+#                 if user.profile.is_blocked == True and user.profile.time_unblock >= timezone.now():
+#                     return HttpResponse('Вы заблокированы!')
+#                 else:
+#                     user.profile.is_blocked = False
+#                     user.profile.save()
+#                     login(request, user)
+#                     return redirect("main")
+#     return render(request, 'web/auth.html', {
+#         "form": form
+#     })
 def auth_view(request):
     form = AuthForm()
     if request.method == 'POST':
@@ -157,12 +191,16 @@ def auth_view(request):
             if user is None:
                 form.add_error(None, "Неправильный логин или пароль")
             else:
-                login(request, user)
-                return redirect("main")
+                if user.profile.is_blocked == True and user.profile.time_unblock > timezone.now():
+                    return HttpResponse('Вы заблокированы')
+                else:
+                    user.profile.is_blocked = False
+                    user.profile.save()
+                    login(request, user)
+                    return redirect("main")
     return render(request, 'web/auth.html', {
         "form": form
     })
-
 
 def logout_view(request):
     logout(request)

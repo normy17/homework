@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <title>Title</title>
 </head>
-<body style="background-color: {{ color }}; color: {{ font_color }}; font-size: {{ font_size }}px !important">
+<body style="background-color: {{ color }}; color: {{ font_color }}; font-size: {{ font_size }}px">
     <h1><a href="{% url 'main' %}">Новости</a></h1>
     <nav>
         {% if user.is_anonymous %}
@@ -18,7 +18,8 @@
                 <a href="{% url 'news_add' %}">Написать новость</a>
                 <a href="{% url 'tags' %}">Теги</a>
                 <a href="{% url 'reg_user_for_admin' %}">Добавить пользователя</a>
-                <a href="settings">Настройки</a>
+                <a href="{% url 'settings' %}">Настройки</a>
+                <a href="{% url 'block_user' %}">Блокировка пользователя</a>
             {% endif %}
             <a href="#">Избранное</a>
             <div style="text-align:right">
